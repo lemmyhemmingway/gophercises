@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 )
 
 type Quiz struct {
@@ -15,16 +16,27 @@ type Quiz struct {
 	answer   string
 }
 
+const DEFAULT_TIME = 30
+const DEFAULT_CSV_FILE = "problems.csv"
+
+var point int
+
 func main() {
 	var filename string
 	var timeLimit int
-	flag.StringVar(&filename, "csv", "problems.csv", "Csv file for quiz.")
-	flag.IntVar(&timeLimit, "time", 30, "Time Limit for quiz game.")
+	flag.StringVar(&filename, "file", DEFAULT_CSV_FILE, "Csv file for quiz.")
+	flag.IntVar(&timeLimit, "limit", DEFAULT_TIME, "Time Limit for quiz game.")
 	flag.Parse()
 
 	csvData := ReadCsv(filename)
 	questionList := CreateQuestionList(csvData)
-	PlayTheGame(questionList)
+	timer1 := time.NewTimer(time.Duration(timeLimit) * time.Second)
+	go func() {
+		PlayTheGame(questionList)
+	}()
+	<-timer1.C
+	fmt.Println()
+	fmt.Printf("%d\n", point)
 
 }
 
@@ -60,7 +72,6 @@ func CreateQuestionList(data [][]string) []Quiz {
 }
 
 func PlayTheGame(questions []Quiz) {
-	point := 0
 	reader := bufio.NewReader(os.Stdin)
 	for _, question := range questions {
 		fmt.Printf("%s = ", question.question)
