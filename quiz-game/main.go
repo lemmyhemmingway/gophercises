@@ -16,8 +16,10 @@ type Quiz struct {
 	answer   string
 }
 
-const DEFAULT_TIME = 30
-const DEFAULT_CSV_FILE = "problems.csv"
+const (
+	DEFAULT_TIME     = 30
+	DEFAULT_CSV_FILE = "problems.csv"
+)
 
 var point int
 
@@ -37,6 +39,8 @@ func main() {
 	<-timer1.C
 	fmt.Println()
 	fmt.Printf("%d\n", point)
+
+	// ? TODO: stop channel when question list done
 
 }
 
