@@ -64,12 +64,13 @@ func ReadCsv(filename string) [][]string {
 }
 
 func CreateQuestionList(data [][]string) []Quiz {
-	var quizzes []Quiz
+	// var quizzes []Quiz // already knew the size do not use append
+	quizzes := make([]Quiz, len(data))
 
-	for _, line := range data {
-		q := Quiz{question: strings.TrimSpace(line[0]), answer: strings.TrimSpace(line[1])}
+	for i, line := range data {
+		quizzes[i] = Quiz{question: strings.TrimSpace(line[0]), answer: strings.TrimSpace(line[1])}
 
-		quizzes = append(quizzes, q)
+		// quizzes = append(quizzes, q)
 	}
 
 	return quizzes
